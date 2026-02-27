@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionData } from "@/lib/session";
 
+export const runtime = "nodejs";
+export const maxDuration = 15;
+
 const MODELS = [
   "gemini-2.5-flash",
   "gemini-2.0-flash",
@@ -27,26 +30,16 @@ async function callGemini(apiKey: string, prompt: string): Promise<string | null
         }
       );
 
-      if (res.status === 429) {
-        console.log(`[AI] ${model} rate limited, trying next…`);
-        continue;
-      }
-
-      if (!res.ok) {
-        console.log(`[AI] ${model} error ${res.status}, trying next…`);
-        continue;
-      }
+      if (res.status === 429) continue;
+      if (!res.ok) continue;
 
       const data = await res.json();
-      console.log(`[AI] ${model} raw:`, JSON.stringify(data).slice(0, 500));
       const parts = data?.candidates?.[0]?.content?.parts ?? [];
       const outputPart = parts.filter((p: { thought?: boolean }) => !p.thought).pop();
       const text = (outputPart?.text ?? "").trim();
-      console.log(`[AI] ${model} text: "${text}" (parts: ${parts.length})`);
       if (!text) continue;
       return text;
-    } catch (err) {
-      console.log(`[AI] ${model} exception:`, err);
+    } catch {
       continue;
     }
   }
@@ -72,8 +65,7 @@ export async function POST(req: NextRequest) {
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey || apiKey === "your-gemini-api-key-here") {
-    console.log("[AI] No valid GEMINI_API_KEY configured");
-    return NextResponse.json({ department_id: null });
+    return NextResponse.json({ department_id: null, error: "no_api_key" });
   }
 
   const deptList = departments
@@ -93,13 +85,11 @@ Reply with ONLY the department ID number. Nothing else. No punctuation, no expla
   const rawText = await callGemini(apiKey, prompt);
 
   if (!rawText || rawText.toLowerCase().includes("none")) {
-    console.log("[AI] No match or all models exhausted");
     return NextResponse.json({ department_id: null });
   }
 
   const numMatch = rawText.match(/(\d+)/);
   if (!numMatch) {
-    console.log("[AI] No number found in response:", rawText);
     return NextResponse.json({ department_id: null });
   }
 
@@ -107,8 +97,6 @@ Reply with ONLY the department ID number. Nothing else. No punctuation, no expla
   const matchedDept = departments.find(
     (d: { id: number }) => Number(d.id) === parsed
   );
-
-  console.log("[AI] Parsed ID:", parsed, "Matched:", matchedDept?.name ?? "NONE");
 
   return NextResponse.json({
     department_id: matchedDept ? parsed : null,

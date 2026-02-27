@@ -60,6 +60,7 @@ export default function UserDashboard() {
   const [selectedDept, setSelectedDept] = useState<string>("");
   const [aiSuggesting, setAiSuggesting] = useState(false);
   const [aiSuggestedName, setAiSuggestedName] = useState<string | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const load = useCallback(async () => {
@@ -101,6 +102,7 @@ export default function UserDashboard() {
 
   function handleDescriptionChange(value: string) {
     if (debounceRef.current) clearTimeout(debounceRef.current);
+    setAiError(null);
     if (value.trim().length < 20 || departments.length === 0) {
       setAiSuggestedName(null);
       return;
@@ -118,6 +120,11 @@ export default function UserDashboard() {
           body: JSON.stringify(payload),
         });
         const data = await res.json();
+        if (data.error === "no_api_key") {
+          setAiError("no_api_key");
+          setAiSuggesting(false);
+          return;
+        }
         if (data.department_id != null) {
           const deptIdStr = String(data.department_id);
           setSelectedDept(deptIdStr);
@@ -261,6 +268,11 @@ export default function UserDashboard() {
                   {!aiSuggesting && aiSuggestedName && (
                     <span className="text-xs text-accent">
                       AI suggested: {aiSuggestedName}
+                    </span>
+                  )}
+                  {aiError === "no_api_key" && (
+                    <span className="text-xs text-yellow-400" title="Set GEMINI_API_KEY in Vercel project settings">
+                      AI unavailable (set GEMINI_API_KEY)
                     </span>
                   )}
                 </div>
