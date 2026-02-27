@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-base text-white antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent/30 text-white;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-base;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-base-300 rounded-full hover:bg-base-400;
+  }
+}
+
+/* ─── Grid background effect ─── */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(62, 207, 142, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(62, 207, 142, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.bg-grid-dense {
+  background-image:
+    linear-gradient(rgba(62, 207, 142, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(62, 207, 142, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.bg-radial-fade {
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(62, 207, 142, 0.08), transparent 70%);
+}
+
+@layer components {
+  /* ─── Buttons ─── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-base shadow-glow-sm transition-all duration-200 hover:shadow-glow hover:brightness-110 active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-xl border border-border bg-transparent px-5 py-2.5 text-sm font-semibold text-gray-300 transition-all duration-200 hover:bg-surface-raised hover:border-border-light hover:text-white active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  .btn-destructive {
+    @apply inline-flex items-center justify-center rounded-xl bg-red-500/10 border border-red-500/20 px-5 py-2.5 text-sm font-semibold text-red-400 transition-all duration-200 hover:bg-red-500/20 hover:border-red-500/40 active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  .btn-secondary {
+    @apply btn-ghost;
+  }
+
+  /* ─── Inputs ─── */
+  .input {
+    @apply w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-white shadow-sm transition-all duration-200 placeholder:text-gray-500 focus:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/20;
+  }
+
+  /* ─── Cards ─── */
+  .card {
+    @apply rounded-2xl border border-border bg-surface p-6 shadow-card transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply card hover:border-accent/20 hover:shadow-glow-sm;
+  }
+
+  .card-metric {
+    @apply rounded-2xl border border-border bg-surface p-5 transition-all duration-200;
+  }
+
+  /* ─── Badges ─── */
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+
+  .badge-pending {
+    @apply badge bg-yellow-400/10 text-yellow-400 border border-yellow-400/20;
+  }
+
+  .badge-progress {
+    @apply badge bg-blue-400/10 text-blue-400 border border-blue-400/20;
+  }
+
+  .badge-resolved {
+    @apply badge bg-green-500/10 text-green-400 border border-green-500/20;
+  }
+
+  .badge-closed {
+    @apply badge bg-gray-500/10 text-gray-500 border border-gray-500/20;
+  }
+
+  .badge-high {
+    @apply badge bg-red-500/10 text-red-400 border border-red-500/20;
+  }
+
+  .badge-medium {
+    @apply badge bg-yellow-400/10 text-yellow-400 border border-yellow-400/20;
+  }
+
+  .badge-low {
+    @apply badge bg-gray-500/10 text-gray-400 border border-gray-500/20;
+  }
+
+  /* ─── Tables ─── */
+  .table-dark {
+    @apply w-full text-sm;
+  }
+
+  .table-dark thead {
+    @apply bg-surface-raised text-left;
+  }
+
+  .table-dark th {
+    @apply px-5 py-3 font-semibold text-gray-400 text-xs uppercase tracking-wider;
+  }
+
+  .table-dark tbody {
+    @apply divide-y divide-border;
+  }
+
+  .table-dark td {
+    @apply px-5 py-3.5;
+  }
+
+  .table-dark tbody tr {
+    @apply transition-colors hover:bg-surface-raised/50;
+  }
+
+  /* ─── Dashboard layout ─── */
+  .dash-page {
+    @apply p-6 lg:p-8;
+  }
+
+  .dash-container {
+    @apply max-w-6xl mx-auto space-y-8;
+  }
+
+  .dash-header h1 {
+    @apply text-2xl font-bold text-white;
+  }
+
+  .dash-header p {
+    @apply mt-1 text-gray-400;
+  }
+
+  /* ─── Metric grid ─── */
+  .metric-grid {
+    @apply grid gap-4 grid-cols-2 sm:grid-cols-4;
+  }
+
+  .metric-grid-5 {
+    @apply grid gap-4 grid-cols-2 sm:grid-cols-5;
+  }
+}
