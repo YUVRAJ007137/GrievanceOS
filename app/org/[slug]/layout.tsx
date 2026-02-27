@@ -86,6 +86,7 @@ function getNavLinks(
         { href: `${base}/admin/departments`, label: "Departments" },
         { href: `${base}/admin/dept-admins`, label: "Dept Admins" },
         { href: `${base}/admin/complaints`, label: "Complaints" },
+        { href: `${base}/admin/invite`, label: "Invite" },
       ];
     case "dept_admin":
       return [
